@@ -1,4 +1,3 @@
-// cmd/golang-apis/main.go
 package main
 
 import (
@@ -9,21 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+
+	"golang-apis/infra"
+	"golang-apis/internal/models"
 )
 
-// Maintenance represents the maintenance table in the database
-type Maintenance struct {
-	ID          int    `gorm:"primaryKey"`
-	Title       string `gorm:"size:255"`
-	Body        string `gorm:"type:text"`
-	DetailedUrl string `gorm:"size:255"`
-}
-
-func printHelloWorld() {
-	fmt.Println("Hello, World!")
-}
-
-func fetchMaintenances(db *gorm.DB, wg *sync.WaitGroup, maintenances *[]Maintenance) {
+func fetchMaintenances(db *gorm.DB, wg *sync.WaitGroup, maintenances *[]models.Maintenance) {
 	defer wg.Done()
 	result := db.Find(maintenances)
 	if result.Error != nil {
@@ -31,8 +21,24 @@ func fetchMaintenances(db *gorm.DB, wg *sync.WaitGroup, maintenances *[]Maintena
 	}
 }
 
+func createMaintenance(db *gorm.DB, c *gin.Context) {
+
+	var maintenance models.Maintenance
+	if err := c.ShouldBindJSON(&maintenance); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	result := infra.DB.Create(&maintenance)
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, maintenance)
+}
+
 func main() {
-	printHelloWorld()
 
 	// Initialize the database connection
 	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
@@ -42,14 +48,14 @@ func main() {
 	}
 
 	// Migrate the schema
-	db.AutoMigrate(&Maintenance{})
+	db.AutoMigrate(&models.Maintenance{})
 
 	// Initialize Gin router
 	r := gin.Default()
 
 	// Define GET endpoint to fetch Maintenance records
 	r.GET("/maintenances", func(c *gin.Context) {
-		var maintenances []Maintenance
+		var maintenances []models.Maintenance
 		var wg sync.WaitGroup
 		wg.Add(1)
 		go fetchMaintenances(db, &wg, &maintenances)
@@ -58,6 +64,11 @@ func main() {
 		c.JSON(http.StatusOK, maintenances)
 	})
 
-	// Start the Gin server
+	// Define POST endpoint to create a new Maintenance record
+	r.POST("/maintenances", func(c *gin.Context) {
+		createMaintenance(db, c)
+	})
+
+	fmt.Println("Server is running on port 8080")
 	r.Run(":8080")
 }
