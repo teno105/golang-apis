@@ -2,9 +2,9 @@ package infra
 
 import "io/ioutil"
 
-func loadGameData(gameID string) (*Root, error) {
+func loadNotice(gameID string) (*Root, error) {
 	// 파일 경로 구성
-	filePath := fmt.Sprintf("%s.json", gameID)
+	filePath := filepath.Join("data", gameID, "notice.json")
 
 	// 파일 읽기
 	data, err := ioutil.ReadFile(filePath)
