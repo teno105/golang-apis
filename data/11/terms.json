@@ -1,0 +1,18 @@
+{
+    "terms": [
+        {
+            "language": "Korean",
+            "version": 1,
+            "start_date": "2025-02-01",
+            "url": "https://www.naver.com",
+            "url_for_txt": "terms"
+        },
+        {
+            "language": "English",
+            "version": 1,
+            "start_date": "2025-02-01",
+            "url": "https://www.naver.com",
+            "url_for_txt": "terms"
+        }
+    ]
+}
