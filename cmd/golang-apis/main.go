@@ -64,9 +64,15 @@ func main() {
 		c.JSON(http.StatusOK, maintenances)
 	})
 
-	// Define POST endpoint to create a new Maintenance record
-	r.POST("/maintenances", func(c *gin.Context) {
-		createMaintenance(db, c)
+	// GET /v2/init_data/games/:id 엔드포인트
+	r.GET("/v2/init_data/games/:id", func(c *gin.Context) {
+		gameID := c.Param("id") // URL에서 game ID 가져오기
+		data, err := loadGameData("game_id" + gameID) // game_id + id 형태로 파일명 생성
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Game data not found"})
+			return
+		}
+		c.JSON(http.StatusOK, data)
 	})
 
 	fmt.Println("Server is running on port 8080")
