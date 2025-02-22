@@ -13,10 +13,16 @@ import (
 
 // 특정 게임 ID에 해당하는 데이터를 로드하는 함수
 func loadGameData(gameID string) (*GameData, error) {
+	updateMessagePath := filepath.Join("data", gameID, "notice.json")
 	maintenancePath := filepath.Join("data", gameID, "maintenance.json")
 	noticePath := filepath.Join("data", gameID, "notice.json")
 
 	var gameData GameData
+
+	// update_message.json 읽기
+	if err := loadJSONFile(updateMessagePath, &gameData.UpdateMessage); err != nil {
+		return nil, err
+	}
 
 	// maintenance.json 읽기
 	if err := loadJSONFile(maintenancePath, &gameData.Maintenance); err != nil {
