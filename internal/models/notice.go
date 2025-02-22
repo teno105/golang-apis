@@ -2,12 +2,17 @@ package models
 
 import "encoding/json"
 
+// Notice JSON 구조체
 type Notice struct {
-	LocalList []NoticeLanguageData `json:"local_list"`
+	LocalList []LanguageData `json:"local_list"`
 }
 
-type NoticeLanguageData struct {
-	Language string `json:"language",omitempty`
+type LanguageData struct {
+	Language string `json:"language,omitempty"` // "name" 대신 "language" 사용
 	Title    string `json:"title"`
 	Body     string `json:"body"`
+}
+
+type NoticeRoot struct {
+	Notice Notice `json:"notice"`
 }

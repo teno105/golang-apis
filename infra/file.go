@@ -2,21 +2,14 @@ package infra
 
 import "io/ioutil"
 
-func loadNotice(gameID string) (*Root, error) {
-	// 파일 경로 구성
-	filePath := filepath.Join("data", gameID, "notice.json")
-
+// JSON 파일을 읽어 구조체로 변환하는 함수
+func loadJSONFile(filePath string, v interface{}) error {
 	// 파일 읽기
 	data, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	// JSON을 구조체로 변환
-	var result Root
-	err = json.Unmarshal(data, &result)
-	if err != nil {
-		return nil, err
-	}
-	return &result, nil
+	return json.Unmarshal(data, v)
 }

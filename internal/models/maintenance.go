@@ -1,17 +1,19 @@
 package models
 
-import "gorm.io/gorm"
+import "encoding/json"
 
-type User struct {
-	gorm.Model        // ID, CreatedAt, UpdatedAt, DeletedAt 필드를 포함
-	Name       string `gorm:"size:255"` // Name 필드의 최대 길이를 255로 제한
-	Email      string `gorm:"unique"`   // Email 필드는 유일해야 함 (인덱스 생성)
-	Age        int    // Age 필드는 정수형
+// Maintenance JSON 구조체
+type Maintenance struct {
+	Message []MaintenanceMessage `json:"message"`
 }
 
-type Maintenance struct {
-	ID          int    `gorm:"primaryKey"`
-	Title       string `gorm:"size:255"`
-	Body        string `gorm:"type:text"`
-	DetailedUrl string `gorm:"size:255"`
+type MaintenanceMessage struct {
+	Language    string `json:"language,omitempty"` // "name" 대신 "language" 사용
+	Title       string `json:"title"`
+	Body        string `json:"body"`
+	DetailedURL string `json:"detailed_url"`
+}
+
+type MaintenanceRoot struct {
+	Maintenance Maintenance `json:"maintenance"`
 }
