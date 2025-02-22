@@ -13,14 +13,32 @@ import (
 
 // 특정 게임 ID에 해당하는 데이터를 로드하는 함수
 func loadGameData(gameID string) (*GameData, error) {
-	updateMessagePath := filepath.Join("data", gameID, "notice.json")
-	maintenancePath := filepath.Join("data", gameID, "maintenance.json")
+	inGameBoardPath := filepath.Join("data", gameID, "in_game_board.json")
+	latestPolicyPath := filepath.Join("data", gameID, "latest_policy.json")
+	versionInfosPath := filepath.Join("data", gameID, "version_infos.json")
 	noticePath := filepath.Join("data", gameID, "notice.json")
+	maintenancePath := filepath.Join("data", gameID, "maintenance.json")
+	storeLinkPath := filepath.Join("data", gameID, "store_link.json")
 
 	var gameData GameData
 
-	// update_message.json 읽기
-	if err := loadJSONFile(updateMessagePath, &gameData.UpdateMessage); err != nil {
+	// in_game_board.json 읽기
+	if err := loadJSONFile(inGameBoardPath, &gameData.InGameBoard); err != nil {
+		return nil, err
+	}
+
+	// latest_policy.json 읽기
+	if err := loadJSONFile(latestPolicyPath, &gameData.LatestPolicy); err != nil {
+		return nil, err
+	}
+
+	// version_infos.json 읽기
+	if err := loadJSONFile(versionInfosPath, &gameData.VersionInfos); err != nil {
+		return nil, err
+	}
+
+	// notice.json 읽기
+	if err := loadJSONFile(noticePath, &gameData.Notice); err != nil {
 		return nil, err
 	}
 
@@ -29,8 +47,8 @@ func loadGameData(gameID string) (*GameData, error) {
 		return nil, err
 	}
 
-	// notice.json 읽기
-	if err := loadJSONFile(noticePath, &gameData.Notice); err != nil {
+	// store_link.json 읽기
+	if err := loadJSONFile(storeLinkPath, &gameData.StoreLink); err != nil {
 		return nil, err
 	}
 
