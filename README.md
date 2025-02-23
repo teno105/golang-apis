@@ -98,10 +98,6 @@ func LoadJSONFile(filePath string, target interface{}) error {
 		return err
 	}
 
-	if err := json.Unmarshal([]byte(file), &target); err != nil {
-		return err
-	}
-
 	return json.Unmarshal(file, &target)
 }
 ```
