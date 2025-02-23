@@ -3,7 +3,7 @@
 `golang-apis` 는 Golang으로 작성된 json 파일들을 gin으로 받아오는 프로젝트입니다.
 게임이 실행될때 접속할 서버정보와 공지사항, 개인정보 정책 등을 얻어옵니다.
 
-## 프로젝트 폴더 구조
+### 프로젝트 폴더 구조
 ```plaintext
 golang-apis/
 │
@@ -12,8 +12,8 @@ golang-apis/
 │        └── main.go
 │
 ├── infra/
-│   ├── db.json
-│   └── file.proto
+│   ├── db.go
+│   └── file.go
 │
 ├── internal/
 │   └── models/
@@ -37,3 +37,94 @@ golang-apis/
 ├── Makefile
 └── README.md
 ```
+
+## infra 폴더 설명
+file.go : /Data 에서 struct GameData 의 Type에 맞는 데이터를 가져오는 함수가 정의 되어있다.
+db.go : gorm 을 통해서 DB에 있는 데이터를 가져오는 함수가 정의 되어있다. (구현 예정)
+
+## internal/models 폴더 설명
+GameData 가 가지는 Data를 struct 형태로 정의되어 있다.
+
+## data 폴더 설명
+각 GameId 별로 게임서비스에 필요한 Data를 json 파일형태로 보관한다.
+
+### 주요 기능
+
+## file.go
+```go
+func getProjectRoot() string {
+	dir, err := os.Getwd()  // 현재 폴더 경로 확인 (/전체경로/cmd/golang-apis)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for {
+		if _, err := os.Stat(filepath.Join(dir, "go.mod")); err == nil { // 경로상에 go.mod 파일이 존재하는지 확인
+			return dir
+		}
+		parent := filepath.Dir(dir) // 부모 디렉토리로 경로 변경
+		if parent == dir {
+			break
+		}
+		dir = parent
+	}
+
+	log.Fatal("go.mod 파일을 찾을 수 없습니다.")
+	return ""
+}
+```
+go.mod 파일을 기준으로 프로젝트 루트 찾기를 한다.
+이렇게 해야 지정된 파일을 어느 환경에서도 파일을 접근할 수 있다.
+
+```go
+func LoadJSONFile(filePath string, target interface{}) error {
+	rootPath := getProjectRoot()
+	if rootPath == "" {
+		err := fmt.Errorf("go.mod 파일을 찾을 수 없습니다.")
+		fmt.Println("작업 디렉토리를 가져오는 중 오류 발생:", err)
+		return err
+	}
+
+	jsonPath := filepath.Join(rootPath, filePath)
+
+	// 파일 경로와 파일 존재 여부 확인
+	if _, err := os.Stat(jsonPath); os.IsNotExist(err) {
+		log.Printf("[WARN] 파일이 존재하지 않음: %s", filePath)
+		return err
+	}
+
+	file, err := os.ReadFile(jsonPath)
+	if err != nil {
+		return err
+	}
+
+	if err := json.Unmarshal([]byte(file), &target); err != nil {
+		return err
+	}
+
+	return json.Unmarshal(file, &target)
+}
+```
+JSON 파일을 읽어 구조체로 변환하는 함수이다.
+아래와 같이 특정 경로에 있는 파일을 gameData 객체로 값을 가져온다.
+```go
+// cmd/main.go
+err := infra.LoadJSONFile("data/11/in_game_board", &gameData);
+```
+
+## main.go
+```go
+r := gin.Default()
+
+// GET /v2/init_data/games/:id 엔드포인트
+r.GET("/v2/init_data/games/:id", func(c *gin.Context) {
+    gameID := c.Param("id")           // URL에서 game ID 가져오기
+    data, err := loadGameData(gameID) // 해당 ID의 데이터를 로드
+    if err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "Game data not found"})
+        return
+    }
+    c.JSON(http.StatusOK, data)
+})
+```
+gin을 사용해서 특정 게임id 를 기준으로 GameData를 가져오는 Get 핸들러를 추가한다.
