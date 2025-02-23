@@ -1,9 +1,9 @@
 # golang-apis
 
 `golang-apis` 는 Golang으로 작성된 json 파일들을 gin으로 받아오는 프로젝트입니다.<br/>
-게임이 실행될때 접속할 서버정보와 공지사항, 개인정보 정책 등을 얻어옵니다.
+게임이 실행될 때, 접속할 서버정보와 공지사항, 개인정보 정책 등을 얻어옵니다.
 
-### 프로젝트 폴더 구조
+## 프로젝트 폴더 구조
 ```plaintext
 golang-apis/
 │
@@ -38,19 +38,19 @@ golang-apis/
 └── README.md
 ```
 
-## infra 폴더 설명
+### infra 폴더 설명
 file.go : /Data 에서 struct GameData 의 Type에 맞는 데이터를 가져오는 함수가 정의 되어있습니다.<br/>
 db.go : gorm 을 통해서 DB에 있는 데이터를 가져오는 함수가 정의 되어있습니다. (구현 예정)
 
-## internal/models 폴더 설명
+### internal/models 폴더 설명
 GameData 가 가지는 Data를 struct 형태로 정의되어 있습니다.
 
-## data 폴더 설명
+### data 폴더 설명
 각 GameId 별로 게임서비스에 필요한 Data를 json 파일형태로 보관합니다.
 
-### 주요 기능
+## 주요 기능
 
-## file.go
+### file.go
 ```go
 func getProjectRoot() string {
 	dir, err := os.Getwd()  // 현재 폴더 경로 확인 (/전체경로/cmd/golang-apis)
@@ -112,7 +112,7 @@ JSON 파일을 읽어 구조체로 변환하는 함수입니다.<br/>
 err := infra.LoadJSONFile("data/11/in_game_board", &gameData);
 ```
 
-## main.go
+### main.go
 ```go
 r := gin.Default()
 
