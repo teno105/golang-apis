@@ -1,14 +1,13 @@
 package models
 
 // LatestPolicy JSON 구조체
-
 type LatestPolicy struct {
-	Privacy   []PrivacyData `json:"privacy"`
-	Terms     []PrivacyData `json:"terms"`
-	NightPush []NightPush   `json:"night_push"`
+	Privacy   []PolicyData `json:"privacy"`
+	Terms     []PolicyData `json:"terms"`
+	NightPush []NightPush  `json:"night_push"`
 }
 
-type PrivacyData struct {
+type PolicyData struct {
 	Language  string `json:"language"`
 	Version   int    `json:"version"`
 	StartDate string `json:"start_date"`

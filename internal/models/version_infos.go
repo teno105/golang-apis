@@ -11,7 +11,7 @@ type VersionInfo struct {
 	VersionNo      string `json:"version_no"`
 	GameServerName string `json:"game_server_name"`
 	GameServerUrl  string `json:"game_server_url"`
-	VisiblePopup   string `json:"visible_popup"`
+	VisiblePopup   bool   `json:"visible_popup"`
 	LatestVersion  string `json:"latest_version"`
 	DynamicConfig  string `json:"dynamic_config"`
 }

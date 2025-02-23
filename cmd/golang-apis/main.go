@@ -34,38 +34,38 @@ func loadGameData(gameID string) (*GameData, error) {
 	var gameData GameData
 
 	// in_game_board.json 읽기
-	if err := infra.LoadJSONFile(inGameBoardPath, &gameData.InGameBoard); err != nil {
-		log.Printf("[WARN] JSON 파일로딩을 실패: %v", err)
-		return nil, err
-	}
-
-	// latest_policy.json 읽기
-	if err := infra.LoadJSONFile(latestPolicyPath, &gameData.LatestPolicy); err != nil {
-		log.Printf("[WARN] JSON 파일로딩을 실패: %v", err)
+	if err := infra.LoadJSONFile(inGameBoardPath, &gameData); err != nil {
+		log.Printf("[WARN] in_game_board.json 파일로딩을 실패: %v", err)
 		return nil, err
 	}
 
 	// version_infos.json 읽기
-	if err := infra.LoadJSONFile(versionInfosPath, &gameData.VersionInfos); err != nil {
-		log.Printf("[WARN] JSON 파일로딩을 실패 %v", err)
+	if err := infra.LoadJSONFile(versionInfosPath, &gameData); err != nil {
+		log.Printf("[WARN] version_infos.json 파일로딩을 실패 %v", err)
+		return nil, err
+	}
+
+	// latest_policy.json 읽기
+	if err := infra.LoadJSONFile(latestPolicyPath, &gameData); err != nil {
+		log.Printf("[WARN] latest_policy.json 파일로딩을 실패: %v", err)
 		return nil, err
 	}
 
 	// notice.json 읽기
-	if err := infra.LoadJSONFile(noticePath, &gameData.Notice); err != nil {
-		log.Printf("[WARN] JSON 파일로딩을 실패: %v", err)
+	if err := infra.LoadJSONFile(noticePath, &gameData); err != nil {
+		log.Printf("[WARN] notice.json 파일로딩을 실패: %v", err)
 		return nil, err
 	}
 
 	// maintenance.json 읽기
-	if err := infra.LoadJSONFile(maintenancePath, &gameData.Maintenance); err != nil {
-		log.Printf("[WARN] JSON 파일로딩을 실패: %v", err)
+	if err := infra.LoadJSONFile(maintenancePath, &gameData); err != nil {
+		log.Printf("[WARN] maintenance.json 파일로딩을 실패: %v", err)
 		return nil, err
 	}
 
 	// store_link.json 읽기
-	if err := infra.LoadJSONFile(storeLinkPath, &gameData.StoreLink); err != nil {
-		log.Printf("[WARN] JSON 파일로딩을 실패 %v", err)
+	if err := infra.LoadJSONFile(storeLinkPath, &gameData); err != nil {
+		log.Printf("[WARN] store_link.json 파일로딩을 실패 %v", err)
 		return nil, err
 	}
 
@@ -88,6 +88,6 @@ func main() {
 	})
 
 	// 서버 실행
-	fmt.Println("Server is running on port 8080...")
+	fmt.Println("Server is running on port 9095...")
 	r.Run(":9095")
 }

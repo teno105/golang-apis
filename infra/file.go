@@ -3,7 +3,6 @@ package infra
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -48,16 +47,14 @@ func LoadJSONFile(filePath string, target interface{}) error {
 		return err
 	}
 
-	file, err := os.Open(jsonPath)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	bytes, err := ioutil.ReadAll(file)
+	file, err := os.ReadFile(jsonPath)
 	if err != nil {
 		return err
 	}
 
-	return json.Unmarshal(bytes, target)
+	if err := json.Unmarshal([]byte(file), &target); err != nil {
+		return err
+	}
+
+	return json.Unmarshal(file, &target)
 }

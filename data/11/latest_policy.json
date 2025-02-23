@@ -35,12 +35,12 @@
         "night_push": [
             {
                 "language": "Korean",
-                "version": "제목1",
+                "version": 1,
                 "body": "내용1"
             },
             {
                 "language": "English",
-                "version": "Title1",
+                "version": 1,
                 "body": "Body1"
             }
         ]
