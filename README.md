@@ -1,6 +1,6 @@
 # golang-apis
 
-`golang-apis` 는 Golang으로 작성된 json 파일들을 gin으로 받아오는 프로젝트입니다.
+`golang-apis` 는 Golang으로 작성된 json 파일들을 gin으로 받아오는 프로젝트입니다.<br/>
 게임이 실행될때 접속할 서버정보와 공지사항, 개인정보 정책 등을 얻어옵니다.
 
 ### 프로젝트 폴더 구조
@@ -39,14 +39,14 @@ golang-apis/
 ```
 
 ## infra 폴더 설명
-file.go : /Data 에서 struct GameData 의 Type에 맞는 데이터를 가져오는 함수가 정의 되어있다.
-db.go : gorm 을 통해서 DB에 있는 데이터를 가져오는 함수가 정의 되어있다. (구현 예정)
+file.go : /Data 에서 struct GameData 의 Type에 맞는 데이터를 가져오는 함수가 정의 되어있습니다.<br/>
+db.go : gorm 을 통해서 DB에 있는 데이터를 가져오는 함수가 정의 되어있습니다. (구현 예정)
 
 ## internal/models 폴더 설명
-GameData 가 가지는 Data를 struct 형태로 정의되어 있다.
+GameData 가 가지는 Data를 struct 형태로 정의되어 있습니다.
 
 ## data 폴더 설명
-각 GameId 별로 게임서비스에 필요한 Data를 json 파일형태로 보관한다.
+각 GameId 별로 게임서비스에 필요한 Data를 json 파일형태로 보관합니다.
 
 ### 주요 기능
 
@@ -73,8 +73,8 @@ func getProjectRoot() string {
 	return ""
 }
 ```
-go.mod 파일을 기준으로 프로젝트 루트 찾기를 한다.
-이렇게 해야 지정된 파일을 어느 환경에서도 파일을 접근할 수 있다.
+go.mod 파일을 기준으로 프로젝트 RootPath를 찾습니다.<br/>
+이렇게 해야 지정된 파일을 어느 환경에서도 파일을 접근할 수 있습니다.
 
 ```go
 func LoadJSONFile(filePath string, target interface{}) error {
@@ -105,8 +105,8 @@ func LoadJSONFile(filePath string, target interface{}) error {
 	return json.Unmarshal(file, &target)
 }
 ```
-JSON 파일을 읽어 구조체로 변환하는 함수이다.
-아래와 같이 특정 경로에 있는 파일을 gameData 객체로 값을 가져온다.
+JSON 파일을 읽어 구조체로 변환하는 함수입니다.<br/>
+아래와 같이 특정 경로에 있는 파일을 gameData 객체로 값을 가져옵니다.
 ```go
 // cmd/main.go
 err := infra.LoadJSONFile("data/11/in_game_board", &gameData);
@@ -127,4 +127,4 @@ r.GET("/v2/init_data/games/:id", func(c *gin.Context) {
     c.JSON(http.StatusOK, data)
 })
 ```
-gin을 사용해서 특정 게임id 를 기준으로 GameData를 가져오는 Get 핸들러를 추가한다.
+gin을 사용해서 특정 게임id 를 기준으로 GameData를 가져오는 Get 핸들러를 추가합니다.
