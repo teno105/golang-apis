@@ -124,3 +124,7 @@ r.GET("/v2/init_data/games/:id", func(c *gin.Context) {
 })
 ```
 gin을 사용해서 특정 게임id 를 기준으로 GameData를 가져오는 Get 핸들러를 추가합니다.
+
+## 실행화면
+실행을 하면 응답상태를 확인할 수 있습니다.
+![Image](https://github.com/user-attachments/assets/abf50340-ec98-4afe-97ca-fca05239a38e)
