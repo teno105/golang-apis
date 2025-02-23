@@ -76,6 +76,16 @@ func getProjectRoot() string {
 go.mod 파일을 기준으로 프로젝트 RootPath를 찾습니다.<br/>
 이렇게 해야 지정된 파일을 어느 환경에서도 파일을 접근할 수 있습니다.
 
+// GameData 구조체
+type GameData struct {
+	InGameBoard  models.InGameBoard  `json:"in_game_board"`
+	LatestPolicy models.LatestPolicy `json:"latest_policy"`
+	VersionInfos models.VersionInfos `json:"version_infos"`
+	Notice       models.Notice       `json:"notice"`
+	Maintenance  models.Maintenance  `json:"maintenance"`
+	StoreLink    models.StoreLink    `json:"store_link"`
+}
+
 ```go
 func LoadJSONFile(filePath string, target interface{}) error {
 	rootPath := getProjectRoot()
