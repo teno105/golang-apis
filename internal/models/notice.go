@@ -1,7 +1,5 @@
 package models
 
-import "encoding/json"
-
 // Notice JSON 구조체
 type Notice struct {
 	LocalList []LanguageData `json:"local_list"`

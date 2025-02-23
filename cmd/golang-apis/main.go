@@ -2,14 +2,25 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
-	"sync"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 
 	"golang-apis/infra"
 	"golang-apis/internal/models"
 )
+
+// GameData 구조체
+type GameData struct {
+	InGameBoard  models.InGameBoard  `json:"in_game_board"`
+	LatestPolicy models.LatestPolicy `json:"latest_policy"`
+	VersionInfos models.VersionInfos `json:"version_infos"`
+	Notice       models.Notice       `json:"notice"`
+	Maintenance  models.Maintenance  `json:"maintenance"`
+	StoreLink    models.StoreLink    `json:"store_link"`
+}
 
 // 특정 게임 ID에 해당하는 데이터를 로드하는 함수
 func loadGameData(gameID string) (*GameData, error) {
@@ -23,32 +34,38 @@ func loadGameData(gameID string) (*GameData, error) {
 	var gameData GameData
 
 	// in_game_board.json 읽기
-	if err := loadJSONFile(inGameBoardPath, &gameData.InGameBoard); err != nil {
+	if err := infra.LoadJSONFile(inGameBoardPath, &gameData.InGameBoard); err != nil {
+		log.Printf("[WARN] JSON 파일로딩을 실패: %v", err)
 		return nil, err
 	}
 
 	// latest_policy.json 읽기
-	if err := loadJSONFile(latestPolicyPath, &gameData.LatestPolicy); err != nil {
+	if err := infra.LoadJSONFile(latestPolicyPath, &gameData.LatestPolicy); err != nil {
+		log.Printf("[WARN] JSON 파일로딩을 실패: %v", err)
 		return nil, err
 	}
 
 	// version_infos.json 읽기
-	if err := loadJSONFile(versionInfosPath, &gameData.VersionInfos); err != nil {
+	if err := infra.LoadJSONFile(versionInfosPath, &gameData.VersionInfos); err != nil {
+		log.Printf("[WARN] JSON 파일로딩을 실패 %v", err)
 		return nil, err
 	}
 
 	// notice.json 읽기
-	if err := loadJSONFile(noticePath, &gameData.Notice); err != nil {
+	if err := infra.LoadJSONFile(noticePath, &gameData.Notice); err != nil {
+		log.Printf("[WARN] JSON 파일로딩을 실패: %v", err)
 		return nil, err
 	}
 
 	// maintenance.json 읽기
-	if err := loadJSONFile(maintenancePath, &gameData.Maintenance); err != nil {
+	if err := infra.LoadJSONFile(maintenancePath, &gameData.Maintenance); err != nil {
+		log.Printf("[WARN] JSON 파일로딩을 실패: %v", err)
 		return nil, err
 	}
 
 	// store_link.json 읽기
-	if err := loadJSONFile(storeLinkPath, &gameData.StoreLink); err != nil {
+	if err := infra.LoadJSONFile(storeLinkPath, &gameData.StoreLink); err != nil {
+		log.Printf("[WARN] JSON 파일로딩을 실패 %v", err)
 		return nil, err
 	}
 
@@ -61,7 +78,7 @@ func main() {
 
 	// GET /v2/init_data/games/:id 엔드포인트
 	r.GET("/v2/init_data/games/:id", func(c *gin.Context) {
-		gameID := c.Param("id") // URL에서 game ID 가져오기
+		gameID := c.Param("id")           // URL에서 game ID 가져오기
 		data, err := loadGameData(gameID) // 해당 ID의 데이터를 로드
 		if err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Game data not found"})
@@ -72,5 +89,5 @@ func main() {
 
 	// 서버 실행
 	fmt.Println("Server is running on port 8080...")
-	r.Run(":8080")
+	r.Run(":9095")
 }

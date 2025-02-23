@@ -1,7 +1,5 @@
 package models
 
-import "encoding/json"
-
 // UpdateMessage JSON 구조체
 type UpdateMessage struct {
 	UpdateMessage []UpdateMessageData `json:"update_message"`

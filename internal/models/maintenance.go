@@ -1,7 +1,5 @@
 package models
 
-import "encoding/json"
-
 // Maintenance JSON 구조체
 type Maintenance struct {
 	Message []MaintenanceMessage `json:"message"`
