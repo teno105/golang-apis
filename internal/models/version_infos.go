@@ -15,3 +15,9 @@ type VersionInfo struct {
 	LatestVersion  string `json:"latest_version"`
 	DynamicConfig  string `json:"dynamic_config"`
 }
+
+type UpdateMessageData struct {
+	LanguageType string `json:"language_type"`
+	Title        string `json:"title"`
+	Body         string `json:"body"`
+}
